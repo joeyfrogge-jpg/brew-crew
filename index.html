@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Brew Crew — Barista Training Counter</title>
   <meta name="description" content="Train as a 7 Brew barista. Random customers, real scoop counts, streaks, rush mode, quizzes." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23c45c26'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='11' font-weight='900' fill='white' font-family='system-ui'%3E7B%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%23e5142b' stroke-width='3'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='11' font-weight='900' fill='%23e5142b' font-family='system-ui'%3E7B%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
@@ -28,7 +28,7 @@
           <div class="shift-top">
             <div>
               <h2>Your training shift</h2>
-              <p class="shift-sub">Good coffee. Great hands.</p>
+              <p class="shift-sub">Good coffee.<br/><span style="color:#e5142b">Great hands.</span></p>
             </div>
             <div class="rank-emoji" id="home-rank-emoji">🌱</div>
           </div>
@@ -44,7 +44,7 @@
           </div>
         </div>
         <div class="home-actions">
-          <button class="primary-btn big" data-go="counter">☕ Start Counter</button>
+          <button class="primary-btn big" data-go="counter">Start Counter →</button>
           <button class="ghost-btn" data-go="counter" data-rush="1">⚡ Rush Mode</button>
         </div>
         <div class="achievements" id="achievements-home"></div>
@@ -193,11 +193,11 @@
         <div class="stat"><span class="stat-val" id="stat-accuracy">—</span><span class="stat-label">Accuracy</span></div>
       </div>
       <div class="drill-list">
-        <button class="drill-card" data-go="counter"><h3>☕ Practice Counter</h3><p>Random customers. Real scoop keys. Build accuracy.</p></button>
-        <button class="drill-card" data-go="counter" data-rush="1"><h3>⚡ Rush Mode</h3><p>45 seconds. How many perfect drinks can you land?</p></button>
-        <button class="drill-card" data-go="study" data-deck="scoops"><h3>🥄 Scoops Flash</h3><p>Drill the Scoops Test Key until it is muscle memory.</p></button>
-        <button class="drill-card" data-go="study" data-deck="signature"><h3>✨ Signature Flash</h3><p>Flavors + milk mix for every Original.</p></button>
-        <button class="drill-card" data-go="quiz"><h3>❓ Quiz Shift</h3><p>10 questions from the real keys.</p></button>
+        <button class="drill-card" data-go="counter"><h3>Practice</h3><p>Take the front counter. Build real customer orders one drink at a time.</p></button>
+        <button class="drill-card" data-go="counter" data-rush="1"><h3>Rush Mode</h3><p>45 seconds. How many perfect drinks can you land?</p></button>
+        <button class="drill-card" data-go="study" data-deck="scoops"><h3>Recipe book</h3><p>Scoops, fill lines, temperatures and shots.</p></button>
+        <button class="drill-card" data-go="study" data-deck="signature"><h3>Signature Flash</h3><p>Flavors + milk mix for every Original.</p></button>
+        <button class="drill-card" data-go="quiz"><h3>Quiz</h3><p>Test what you know. Quick multiple choice.</p></button>
       </div>
       <nav class="bottom-nav" data-active="drills"></nav>
     </section>
@@ -215,11 +215,11 @@
       <div class="quiz-header">
         <h2>Quiz shift</h2>
         <p>Test what you know</p>
-        <div class="quiz-progress">Q <span id="q-num">1</span>/10 · <span id="q-correct">0</span> correct</div>
+        <div class="quiz-progress">Question <span id="q-num">1</span> of 10 · <span id="q-correct">0</span> correct</div>
       </div>
       <div class="quiz-card" id="quiz-card">
         <span class="q-cat" id="q-cat">Fill lines</span>
-        <h3 id="q-text">How many oz is the Large iced fill line?</h3>
+        <h3 id="q-text">How many oz is the Large iced drink fill line?</h3>
         <div class="q-options" id="q-options"></div>
         <button class="ghost-btn" id="q-hint">Hint</button>
         <button class="primary-btn" id="q-check" disabled>Check answer</button>
