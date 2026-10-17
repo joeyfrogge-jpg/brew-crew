@@ -2,49 +2,238 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Brew Crew — Barista Training Counter</title>
-  <meta name="description" content="Practice drink builds, learn recipes and scoop counts, quiz yourself. Cartoon drinks. Works offline on GitHub Pages." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%23e11d48' stroke-width='3'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='11' font-weight='900' fill='%23e11d48' font-family='system-ui'%3E7B%3C/text%3E%3C/svg%3E" />
+  <meta name="description" content="Train as a 7 Brew barista. Random customers, real scoop counts, streaks, rush mode, quizzes." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23c45c26'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-size='11' font-weight='900' fill='white' font-family='system-ui'%3E7B%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app" class="app-shell">
-    <header class="header">
-      <a href="#/" class="logo" data-link>
-        <span class="logo-icon">7B</span>
-        <span class="logo-text"><span>BREW CREW</span><small>BARISTA TRAINING COUNTER</small></span>
-      </a>
-      <div class="header-tagline">Good coffee.<br>Great people.</div>
-    </header>
-    <main class="main" id="main"></main>
-    <nav class="bottom-nav" id="nav">
-      <a href="#/" data-link title="Home">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1v-9.5z"/><path d="M9 21V12h6v9"/></svg>
-        Home
-      </a>
-      <a href="#/counter" data-link title="Counter">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3h8l1 4H7l1-4z"/><path d="M5 7h14v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7z"/><circle cx="12" cy="14" r="2.5"/></svg>
-        Counter
-      </a>
-      <a href="#/study" data-link title="Study">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Study
-      </a>
-      <a href="#/free-play" data-link title="Drills">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-        Drills
-      </a>
-      <a href="#/quiz" data-link title="Quiz">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/></svg>
-        Quiz
-      </a>
-    </nav>
+  <div id="app">
+    <section id="screen-home" class="screen active">
+      <header class="top-bar">
+        <div class="brand">
+          <span class="logo-mark">7B</span>
+          <div>
+            <span class="logo">BREW CREW</span>
+            <span class="sub">BARISTA TRAINING COUNTER</span>
+          </div>
+        </div>
+      </header>
+      <div class="hero">
+        <p class="tagline">Good coffee.<br/>Great people.</p>
+        <div class="shift-card">
+          <div class="shift-top">
+            <div>
+              <h2>Your training shift</h2>
+              <p class="shift-sub">Good coffee. Great hands.</p>
+            </div>
+            <div class="rank-emoji" id="home-rank-emoji">🌱</div>
+          </div>
+          <div class="xp-block">
+            <div class="rank-pill" id="home-rank">New Bean</div>
+            <div class="xp-bar-wrap"><div class="xp-bar" id="home-xp-bar" style="width:16%"></div></div>
+            <p class="xp-text"><span id="home-xp">42</span> XP · <span id="home-next">208</span> to next</p>
+          </div>
+          <div class="home-stats">
+            <div><strong id="home-served">0</strong><span>served</span></div>
+            <div><strong id="home-streak">0</strong><span>best streak</span></div>
+            <div><strong id="home-acc">—</strong><span>accuracy</span></div>
+          </div>
+        </div>
+        <div class="home-actions">
+          <button class="primary-btn big" data-go="counter">☕ Start Counter</button>
+          <button class="ghost-btn" data-go="counter" data-rush="1">⚡ Rush Mode</button>
+        </div>
+        <div class="achievements" id="achievements-home"></div>
+      </div>
+      <nav class="bottom-nav" data-active="home"></nav>
+    </section>
+
+    <section id="screen-counter" class="screen">
+      <header class="top-bar">
+        <div class="brand">
+          <span class="logo-mark">7B</span>
+          <div>
+            <span class="logo">BREW CREW</span>
+            <span class="sub">BARISTA TRAINING COUNTER</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="streak-pill" id="streak-pill" hidden>🔥 <span id="streak-num">0</span></div>
+          <div class="score-pill"><span id="counter-score">0</span> right</div>
+        </div>
+      </header>
+      <div class="rush-bar" id="rush-bar" hidden>
+        <div class="rush-fill" id="rush-fill"></div>
+        <span class="rush-label" id="rush-label">RUSH · 45s</span>
+      </div>
+      <div class="counter-layout">
+        <div class="ticket-card" id="ticket">
+          <div class="ticket-header">
+            <span class="ticket-label">TICKET</span>
+            <span class="ticket-name" id="ticket-name">MARISOL</span>
+          </div>
+          <div class="customer-row">
+            <span class="customer-emoji" id="ticket-emoji">☀️</span>
+            <p class="speech" id="ticket-speech">Sunshine in a cup!</p>
+          </div>
+          <div class="ticket-body">
+            <p class="order-line" id="ticket-order">Medium Blondie</p>
+            <p class="order-detail" id="ticket-detail">Iced · Regular Ice</p>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step active" data-step="1">1 CUP</div>
+          <div class="step" data-step="2">2 DRINK</div>
+          <div class="step" data-step="3">3 SCOOPS</div>
+          <div class="step" data-step="4">4 SERVE</div>
+        </div>
+        <div class="step-panel active" id="panel-cup">
+          <h3>Grab the right cup</h3>
+          <div class="cup-grid">
+            <button class="cup-btn" data-size="Kids">Kids</button>
+            <button class="cup-btn" data-size="Small">Small</button>
+            <button class="cup-btn" data-size="Medium">Medium</button>
+            <button class="cup-btn" data-size="Large">Large</button>
+          </div>
+        </div>
+        <div class="step-panel" id="panel-drink">
+          <h3>What are you making?</h3>
+          <input type="text" id="drink-filter" class="filter-input" placeholder="Filter drinks…" />
+          <div class="drink-grid" id="drink-grid"></div>
+        </div>
+        <div class="step-panel" id="panel-scoops">
+          <h3>How many scoops?</h3>
+          <div class="scoop-controls">
+            <button class="scoop-adj" id="scoop-minus">−</button>
+            <div class="scoop-display" id="scoop-count">0</div>
+            <button class="scoop-adj" id="scoop-plus">+</button>
+          </div>
+          <p class="scoop-note">1 scoop = 1 oz</p>
+          <button class="primary-btn" id="confirm-scoops">Confirm scoops</button>
+        </div>
+        <div class="step-panel" id="panel-check">
+          <h3>Ready to serve?</h3>
+          <div class="check-summary" id="check-summary"></div>
+          <div class="check-actions">
+            <button class="primary-btn" id="serve-btn">Serve it ☕</button>
+            <button class="ghost-btn" id="restart-order">Start over</button>
+          </div>
+        </div>
+      </div>
+      <div class="feedback" id="feedback" hidden>
+        <div class="feedback-card">
+          <div class="feedback-icon" id="feedback-icon">✓</div>
+          <h3 id="feedback-title">Nailed it!</h3>
+          <p id="feedback-detail"></p>
+          <div class="xp-pop" id="xp-pop" hidden>+15 XP</div>
+          <button class="primary-btn" id="next-customer">Next customer →</button>
+        </div>
+      </div>
+      <canvas id="confetti" hidden></canvas>
+      <nav class="bottom-nav" data-active="counter"></nav>
+    </section>
+
+    <section id="screen-study" class="screen">
+      <header class="top-bar">
+        <div class="brand">
+          <span class="logo-mark">7B</span>
+          <div>
+            <span class="logo">BREW CREW</span>
+            <span class="sub">BARISTA TRAINING COUNTER</span>
+          </div>
+        </div>
+      </header>
+      <div class="study-tabs">
+        <button class="tab active" data-deck="signature">Signature</button>
+        <button class="tab" data-deck="scoops">Scoops</button>
+        <button class="tab" data-deck="fills">Fill Lines</button>
+        <button class="tab" data-deck="temps">Temps</button>
+      </div>
+      <div class="flashcard" id="flashcard">
+        <div class="card-front" id="card-front">
+          <span class="card-cat" id="card-cat">Signature</span>
+          <h2 id="card-title">Brunette</h2>
+          <p>Tap to reveal</p>
+        </div>
+        <div class="card-back" id="card-back" hidden>
+          <span class="card-cat">Answer</span>
+          <h2 id="card-answer">Caramel & Hazelnut</h2>
+          <p id="card-extra">Mocha Mix</p>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="ghost-btn" id="card-again">Review again</button>
+        <button class="primary-btn" id="card-gotit">Got it ✓</button>
+      </div>
+      <p class="deck-progress"><span id="deck-pos">1</span> / <span id="deck-total">7</span></p>
+      <nav class="bottom-nav" data-active="study"></nav>
+    </section>
+
+    <section id="screen-drills" class="screen">
+      <header class="top-bar">
+        <div class="brand">
+          <span class="logo-mark">7B</span>
+          <div>
+            <span class="logo">BREW CREW</span>
+            <span class="sub">BARISTA TRAINING COUNTER</span>
+          </div>
+        </div>
+      </header>
+      <div class="drills-hero">
+        <h2>Behind the bar</h2>
+        <p>Progress, not perfection.</p>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><span class="stat-val" id="stat-served">0</span><span class="stat-label">Orders</span></div>
+        <div class="stat"><span class="stat-val" id="stat-streak">0</span><span class="stat-label">Best streak</span></div>
+        <div class="stat"><span class="stat-val" id="stat-accuracy">—</span><span class="stat-label">Accuracy</span></div>
+      </div>
+      <div class="drill-list">
+        <button class="drill-card" data-go="counter"><h3>☕ Practice Counter</h3><p>Random customers. Real scoop keys. Build accuracy.</p></button>
+        <button class="drill-card" data-go="counter" data-rush="1"><h3>⚡ Rush Mode</h3><p>45 seconds. How many perfect drinks can you land?</p></button>
+        <button class="drill-card" data-go="study" data-deck="scoops"><h3>🥄 Scoops Flash</h3><p>Drill the Scoops Test Key until it is muscle memory.</p></button>
+        <button class="drill-card" data-go="study" data-deck="signature"><h3>✨ Signature Flash</h3><p>Flavors + milk mix for every Original.</p></button>
+        <button class="drill-card" data-go="quiz"><h3>❓ Quiz Shift</h3><p>10 questions from the real keys.</p></button>
+      </div>
+      <nav class="bottom-nav" data-active="drills"></nav>
+    </section>
+
+    <section id="screen-quiz" class="screen">
+      <header class="top-bar">
+        <div class="brand">
+          <span class="logo-mark">7B</span>
+          <div>
+            <span class="logo">BREW CREW</span>
+            <span class="sub">BARISTA TRAINING COUNTER</span>
+          </div>
+        </div>
+      </header>
+      <div class="quiz-header">
+        <h2>Quiz shift</h2>
+        <p>Test what you know</p>
+        <div class="quiz-progress">Q <span id="q-num">1</span>/10 · <span id="q-correct">0</span> correct</div>
+      </div>
+      <div class="quiz-card" id="quiz-card">
+        <span class="q-cat" id="q-cat">Fill lines</span>
+        <h3 id="q-text">How many oz is the Large iced fill line?</h3>
+        <div class="q-options" id="q-options"></div>
+        <button class="ghost-btn" id="q-hint">Hint</button>
+        <button class="primary-btn" id="q-check" disabled>Check answer</button>
+      </div>
+      <div class="quiz-result" id="quiz-result" hidden>
+        <div class="quiz-score-big" id="quiz-final-score">8/10</div>
+        <p id="quiz-final-msg">Solid work, barista.</p>
+        <button class="primary-btn" id="quiz-retry">Try again</button>
+      </div>
+      <nav class="bottom-nav" data-active="quiz"></nav>
+    </section>
   </div>
+
   <script src="data.js"></script>
-  <script src="drinks.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
