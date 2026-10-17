@@ -46,7 +46,7 @@ function fireConfetti() {
   const pieces = Array.from({length:70},()=>({
     x: Math.random()*c.width, y: -20-Math.random()*80, w:6+Math.random()*6, h:8+Math.random()*8,
     vy:2+Math.random()*4, vx:-2+Math.random()*4, rot:Math.random()*Math.PI, vr:-0.2+Math.random()*0.4,
-    color:["#c45c26","#2d6a4f","#e9c46a","#e76f51","#264653"][Math.floor(Math.random()*5)]
+    color:["#e5142b","#f5b82e","#2d6a4f","#fff","#c9a85f"][Math.floor(Math.random()*5)]
   }));
   let frames=0;
   (function draw(){
@@ -78,7 +78,7 @@ function showScreen(name, opts={}) {
     });
   });
   if (name==="home") updateHome();
-  if (name==="counter"){ state.rush=!!opts.rush; startNewOrder(); }
+  if (name==="counter"){ state.rush=!!opts.rush; clearInterval(state.rushTimer); state.rushTimer=null; startNewOrder(); }
   if (name==="study"){ if (opts.deck) state.deck=opts.deck; initStudy(); }
   if (name==="drills") updateDrills();
   if (name==="quiz") startQuiz();
@@ -134,6 +134,8 @@ function startNewOrder() {
   document.querySelectorAll(".cup-btn").forEach(b=>b.classList.remove("selected"));
   document.getElementById("scoop-count").textContent="0";
   document.getElementById("drink-filter").value="";
+  const cupNext=document.getElementById("cup-next"); if(cupNext) cupNext.disabled=true;
+  const drinkNext=document.getElementById("drink-next"); if(drinkNext) drinkNext.disabled=true;
   const t=document.getElementById("ticket"); t.classList.remove("ticket-in"); void t.offsetWidth; t.classList.add("ticket-in");
   renderDrinkGrid(); goToStep(1); updateCounterScore();
   if (state.rush && !state.rushTimer) startRushTimer();
@@ -157,7 +159,13 @@ function renderDrinkGrid(filter="") {
   const grid=document.getElementById("drink-grid");
   grid.innerHTML=list.map(d=>`<button class="drink-btn ${state.selectedDrink===d.name?"selected":""}" data-drink="${d.name}"><span class="d-name">${d.name}</span><span class="d-group">${d.group}</span></button>`).join("");
   grid.querySelectorAll(".drink-btn").forEach(btn=>{
-    btn.onclick=()=>{ sfxClick(); state.selectedDrink=btn.dataset.drink; renderDrinkGrid(document.getElementById("drink-filter").value); setTimeout(()=>goToStep(3),220); };
+    btn.onclick=()=>{
+      sfxClick();
+      state.selectedDrink=btn.dataset.drink;
+      renderDrinkGrid(document.getElementById("drink-filter").value);
+      const dn=document.getElementById("drink-next");
+      if(dn) dn.disabled=false;
+    };
   });
 }
 function showFeedback(ok, detail, xpGain) {
@@ -165,16 +173,23 @@ function showFeedback(ok, detail, xpGain) {
   document.getElementById("feedback-icon").textContent=ok?"✓":"✗";
   document.getElementById("feedback-icon").className="feedback-icon "+(ok?"ok":"bad");
   document.getElementById("feedback-title").textContent=ok?(state.streak>=3?rand(STREAK_LINES):rand(WIN_LINES)):rand(LOSE_LINES);
-  document.getElementById("feedback-detail").textContent=detail;
+  document.getElementById("feedback-detail").textContent=detail||"";
   const pop=document.getElementById("xp-pop");
   if (ok&&xpGain){ pop.hidden=false; pop.textContent="+"+xpGain+" XP"; } else pop.hidden=true;
   if (ok){ sfxOk(); if (state.streak>=3||state.streak===1) fireConfetti(); } else sfxBad();
 }
 function evaluateOrder() {
   const o=state.order;
-  const sizeOk=state.selectedSize===o.size, drinkOk=state.selectedDrink===o.drink, scoopOk=state.selectedScoops===o.correctScoops;
+  if (!state.selectedSize || !state.selectedDrink) {
+    showFeedback(false, "Finish building the drink — cup, drink, and scoops.");
+    return;
+  }
+  const sizeOk=state.selectedSize===o.size;
+  const drinkOk=state.selectedDrink===o.drink;
+  const scoopOk=state.selectedScoops===o.correctScoops;
   const allOk=sizeOk&&drinkOk&&scoopOk;
-  state.served++; if (state.rush) state.rushTotal++;
+  state.served++;
+  if (state.rush) state.rushTotal++;
   if (allOk){
     state.correct++; state.streak++; state.bestStreak=Math.max(state.bestStreak,state.streak);
     if (state.rush) state.rushCorrect++;
@@ -185,9 +200,9 @@ function evaluateOrder() {
   } else {
     state.streak=0;
     const misses=[];
-    if (!sizeOk) misses.push(`Cup: ${o.size} (not ${state.selectedSize||"—"})`);
-    if (!drinkOk) misses.push(`Drink: ${o.drink}`);
-    if (!scoopOk) misses.push(`Scoops: ${o.correctScoops} (not ${state.selectedScoops})`);
+    if (!sizeOk) misses.push(`Cup: needed ${o.size} (you picked ${state.selectedSize||"—"})`);
+    if (!drinkOk) misses.push(`Drink: needed ${o.drink} (you picked ${state.selectedDrink||"—"})`);
+    if (!scoopOk) misses.push(`Scoops: needed ${o.correctScoops} (you put ${state.selectedScoops})`);
     showFeedback(false, misses.join(" · "));
   }
   save(); updateCounterScore(); checkAchievements();
@@ -196,7 +211,7 @@ function evaluateOrder() {
 function buildDecks() {
   state.decks={
     signature: SIGNATURES.map(s=>({front:s.name,back:s.flavors,extra:s.milk,cat:"Signature"})),
-    scoops: DRINKS.flatMap(d=>["Small","Medium","Large"].map(sz=>({front:sz+" "+d.name,back:d.scoops[sz]+" scoop"+(d.scoops[sz]!==1?"s":""),extra:d.group,cat:"Scoops"}))),
+    scoops: DRINKS.flatMap(d=>["Kids","Small","Medium","Large"].map(sz=>({front:sz+" "+d.name,back:d.scoops[sz]+" scoop"+(d.scoops[sz]!==1?"s":""),extra:d.group,cat:"Scoops"}))),
     fills: [
       {front:"Large Iced fill line",back:"16 oz",extra:"Kids 5 · S 8 · M 12 · L 16",cat:"Fill Lines"},
       {front:"Medium Hot Espresso",back:"10 oz",extra:"Kids 6 · S 8 · M 10 · L 12",cat:"Fill Lines"},
@@ -274,8 +289,22 @@ document.addEventListener("DOMContentLoaded",()=>{
     btn.addEventListener("click",()=>{ const opts={}; if (btn.dataset.rush) opts.rush=true; if (btn.dataset.deck) opts.deck=btn.dataset.deck; showScreen(btn.dataset.go, opts); });
   });
   document.querySelectorAll(".cup-btn").forEach(btn=>{
-    btn.addEventListener("click",()=>{ sfxClick(); document.querySelectorAll(".cup-btn").forEach(b=>b.classList.remove("selected")); btn.classList.add("selected"); state.selectedSize=btn.dataset.size; setTimeout(()=>goToStep(2),200); });
+    btn.addEventListener("click",()=>{
+      sfxClick();
+      document.querySelectorAll(".cup-btn").forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+      state.selectedSize=btn.dataset.size;
+      document.getElementById("cup-next").disabled=false;
+    });
   });
+  document.getElementById("cup-next").onclick=()=>{
+    if (!state.selectedSize) return;
+    sfxClick(); goToStep(2);
+  };
+  document.getElementById("drink-next").onclick=()=>{
+    if (!state.selectedDrink) return;
+    sfxClick(); goToStep(3);
+  };
   document.getElementById("drink-filter").addEventListener("input",e=>renderDrinkGrid(e.target.value));
   document.getElementById("scoop-minus").onclick=()=>{ state.selectedScoops=Math.max(0,state.selectedScoops-1); document.getElementById("scoop-count").textContent=state.selectedScoops; sfxClick(); };
   document.getElementById("scoop-plus").onclick=()=>{ state.selectedScoops=Math.min(8,state.selectedScoops+1); document.getElementById("scoop-count").textContent=state.selectedScoops; sfxClick(); };
