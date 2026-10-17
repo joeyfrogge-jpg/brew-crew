@@ -1,42 +1,50 @@
-# Brew Crew — Barista Training Game
+# Brew Crew — Barista Training Counter
 
-Practice drink builds, learn recipes & scoop counts, quiz yourself, and train behind the bar.
+Fully playable training game for 7 Brew baristas. Built from the **Scoops Test Key** and **Brewista 101 Key** (Dec 2025).
 
-**No Replit. No build step.** Pure static HTML/CSS/JS — works on GitHub Pages, Netlify, or any static host.
+**No build step.** Pure HTML/CSS/JS. Works on GitHub Pages.
 
-## Live on GitHub Pages
+## Play live
 
-After enabling Pages (Settings → Pages → Deploy from branch `main` / root):
+**https://joeyfrogge-jpg.github.io/brew-crew/**
 
-`https://joeyfrogge-jpg.github.io/brew-crew/`
+## What’s inside
+
+| Station | What you get |
+|--------|----------------|
+| **Home** | XP ranks (New Bean → Bar Legend), stats, badges, Rush Mode |
+| **Counter** | Random customer + **completely random drink** every ticket. 4-step build: Cup → Drink → Scoops → Serve |
+| **Study** | Flashcards: signatures, scoops, fill lines, temps |
+| **Drills** | Practice, Rush Mode (45s), flash decks, quiz |
+| **Quiz** | 10 questions from the real keys |
+
+### Fun extras
+- Customer personalities + speech bubbles  
+- Streak flames & combo XP bonuses  
+- Confetti on perfect serves  
+- Sound effects (Web Audio)  
+- Rush Mode timer  
+- Achievements (First Pour, On Fire, Key Master, Rush Survivor…)  
+
+### Training accuracy
+Every scoop count, fill line, temperature range, and signature flavor/milk mix comes from the confidential keys.  
+**Every customer always gets a fully random drink** (size + hot/iced + ice/temp prefs + drink type).
 
 ## Local
 
-Open `index.html` in a browser, or:
-
 ```bash
 npx serve .
+# or open index.html
 ```
-
-## Features
-
-| Station | What it does |
-|--------|----------------|
-| **Home** | XP ranks (New Bean → Legend), stats, station picker |
-| **Counter** | Multi-step practice orders: cup → drink → scoops + hints |
-| **Recipe book** | Flashcards for signature drinks, scoops, fill lines, temps |
-| **Cheat sheet** | Full reference tables |
-| **Free play** | No-pressure drills |
-| **Quiz** | 10 randomized questions |
-
-Progress is saved in `localStorage` on this device.
 
 ## Files
 
-- `index.html` — shell + router mount  
+- `index.html` — UI shell  
 - `styles.css` — Brew Crew UI  
-- `data.js` — recipes, scoops, fills, temperatures  
-- `app.js` — SPA logic (home, counter, study, quiz, free play)
+- `data.js` — recipes, scoops, fills, customers, random order generator  
+- `app.js` — game logic  
+
+Progress saves in `localStorage` on this device.
 
 ## License
 
